@@ -1,28 +1,50 @@
-# Use postgres/example user/password credentials
 version: '3.1'
 
-services:
-  db:
+services: 
+  webserver: 
+    image: nginx:latest
+    container_name: nginx-prod
+    volumes:
+      - /home/ruben/workspace/uniandes/proyecto0/infra/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /home/ruben/workspace/uniandes/proyecto0/frontend/build:/usr/share/nginx/html
+    ports:
+      - 80:80
+      - 443:443
+#   networks:
+#      - webnet
+  database:
     image: postgres
     restart: always
-    container_name: "my_postgres"
+    container_name: "postgresql-prod"
     environment:
-      POSTGRES_PASSWORD: example
-    ports:
-        - "54320:5432"
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: "123"
+      POSTGRES_DB: dev
     volumes:
-      - my_dbdata:/var/lib/postgresql/data
-  webapp:
-    container_name: webapp
+      - postgresql-db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+#    networks:
+#      - webnet
+  backend:
+    container_name: "backend-prod"
     build:
-      context: .
+      context: /home/ruben/workspace/uniandes/proyecto0/backend
       dockerfile: Dockerfile
-    volumes:
-      - '.:/app'
-      - '/app/node_modules'
     ports:
-       - '80:80'
-    environment:
-      - APP_ENV=development
+      - 9001:9001
+#    networks:
+#      - webnet
+#  npm-build:
+#    container_name: npm-build
+#    build:
+#      context: /home/ruben/workspace/uniandes/proyecto0/frontend
+#      dockerfile: Dockerfile
+#    volumes:
+#      - /home/ruben/workspace/uniandes/proyecto0/frontend:/app
+#      - /app/node_modules
+networks:
+  webnet:
 volumes:
-  my_dbdata:
+  postgresql-db:
+#  webapp-build:
