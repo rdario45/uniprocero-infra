@@ -3,68 +3,55 @@ version: '3.1'
 services: 
   webserver: 
     image: nginx:latest
-    #container_name: nginx-pdn
+    container_name: nginx-pdn
     depends_on:
       - eventos
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ../frontend/build:/usr/share/nginx/html
-    #ports:
-    #  - 80:80
-    #  - 443:443
     hostname: webserver
+    networks: 
+      - backend
+      - frontend
+    ports:
+      - 80:80
+      - 443:443
   eventos:
     image: openjdk:8
-    #container_name: "eventos-pdn"
+    container_name: events-pdn
     depends_on:
       - database
     volumes:
       - ../backend/eventos-1.0:/opt/eventos
       - ../backend/logs:/opt/eventos/logs  
-    #ports:
-    #  - 9001:9001  
+    hostname: eventos   
+    networks: 
+      - backend
+      - frontend
+    expose:
+      - "9001"
     environment:
       TZ: "America/Bogota"
       LANG: "C.UTF-8"
-    hostname: eventos
     restart: always
-    command: "./opt/eventos/bin/eventos"
+    command: "bash ./opt/eventos/bin/eventos -J-server -J-Xms512m -J-Xmx512m"
   database:
     image: postgres
-    restart: always
-    #container_name: "postgresql-pdn"
+    container_name: postgresql-pdn
+    hostname: database
+    networks: 
+      - backend
+    ports:
+      - 5432:5432   
     environment:
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: "123"
+      POSTGRES_PASSWORD: 123
       POSTGRES_DB: dev
-    hostname: database
+    restart: always
     volumes:
       - postgresql-db:/var/lib/postgresql/data
-    #ports:
-    #  - 5432:5432
-#    networks:
-#      - webnet
-#  backend:
-#    container_name: "backend-prod"
-#    build:
-#      context: /home/ruben/workspace/uniandes/proyecto0/backend
-#      dockerfile: Dockerfile
-#    ports:
-#      - 9001:9001
-#    networks:
-#      - webnet
-#  npm-build:
-#    container_name: npm-build
-#    build:
-#      context: /home/ruben/workspace/uniandes/proyecto0/frontend
-#      dockerfile: Dockerfile
-#    volumes:
-#      - /home/ruben/workspace/uniandes/proyecto0/frontend:/app
-#      - /app/node_modules
-#networks:
-#  webnet:
+networks:
+  backend:
+  frontend:
 volumes:
   postgresql-db:
-networks:
-  default:
-
