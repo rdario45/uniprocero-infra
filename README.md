@@ -13,5 +13,5 @@ docker run --name nginx-ws -v /home/SIS/rd.fernandez/proyecto0/frontend/build:/u
 # backend/
 sbt dist
 unzip ./target/universal/eventos-1.0.zip
-./eventos-1.0/bin/eventos
 
+setsid nohup ./eventos-1.0/bin/eventos &
