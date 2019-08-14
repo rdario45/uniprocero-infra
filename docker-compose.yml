@@ -28,8 +28,8 @@ services:
     networks: 
       - backend
       - frontend
-    expose:
-      - "9001"
+    ports:
+      - 9001:9001
     environment:
       TZ: "America/Bogota"
       LANG: "C.UTF-8"
