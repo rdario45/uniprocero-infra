@@ -1,0 +1,3 @@
+FROM openjdk:8
+COPY ./certificates/* /tmp/certificates/
+RUN find /tmp/certificates/* -maxdepth 1 -type f -exec keytool -noprompt -import -keystore "$JAVA_HOME/jre/lib/security/cacerts" -file {} -alias {} -storepass changeit \;

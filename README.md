@@ -12,5 +12,14 @@ production:
 * WebServer and Proxy reverse: Nginx
 
 develop and prod:
-	INFRA_FOLDER="/home/ruben/workspace/uniandes/proyecto0/infra" && \
-	docker run --name nginx-ws -v ${INFRA_FOLDER}/nginx.conf:/etc/nginx/nginx.conf:ro -d --network host nginx
+	NGINX_FOLDER="/home/ruben/workspace/uniandes/proyecto0/infra/nginx" && \
+	docker run --name nginx-ws -v ${NGINX_FOLDER}/nginx.conf:/etc/nginx/nginx.conf:ro -d --network host nginx
+
+
+eventos depends on prostgresql
+
+sbt dist
+
+unzip ./target/universal/eventos-1.0.zip
+
+./eventos-1.0/bin/eventos
