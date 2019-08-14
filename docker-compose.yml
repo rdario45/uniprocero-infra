@@ -11,10 +11,9 @@ services:
       - ../frontend/build:/usr/share/nginx/html
     hostname: webserver
     networks: 
-      - backend
       - frontend
     ports:
-      - 80:80
+      - 8080:8080
       - 443:443
   eventos:
     image: openjdk:8
