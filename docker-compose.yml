@@ -3,26 +3,26 @@ version: '3.1'
 services: 
   webserver: 
     image: nginx:latest
-    container_name: nginx-pdn
-  depends_on:
+    #container_name: nginx-pdn
+    depends_on:
       - eventos
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ../frontend/build:/usr/share/nginx/html
-    ports:
-      - 80:80
-      - 443:443
+    #ports:
+    #  - 80:80
+    #  - 443:443
     hostname: webserver
   eventos:
     image: openjdk:8
-    container_name: "eventos-pdn"
+    #container_name: "eventos-pdn"
     depends_on:
       - database
     volumes:
       - ../backend/eventos-1.0:/opt/eventos
       - ../backend/logs:/opt/eventos/logs  
-     ports:
-      - 9001:9001  
+    #ports:
+    #  - 9001:9001  
     environment:
       TZ: "America/Bogota"
       LANG: "C.UTF-8"
@@ -32,16 +32,16 @@ services:
   database:
     image: postgres
     restart: always
-    container_name: "postgresql-pdn"
+    #container_name: "postgresql-pdn"
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: "123"
       POSTGRES_DB: dev
-    hostname: webserver
+    hostname: database
     volumes:
       - postgresql-db:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
+    #ports:
+    #  - 5432:5432
 #    networks:
 #      - webnet
 #  backend:
@@ -67,6 +67,4 @@ volumes:
   postgresql-db:
 networks:
   default:
-    external:
-      name: tecnico_default
 
